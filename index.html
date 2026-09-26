@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2480117696040690"
+     crossorigin="anonymous"></script>
+  <title>Ingredient Pokémon Selection Simulator | Pokémon Sleep Strategy</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@600;700;800&display=swap');
+
+    :root {
+      --pks-night-deep: #161029;
+      --pks-night-panel: #251c47;
+      --pks-night-panel-2: #2f2459;
+      --pks-purple: #a98ee8;
+      --pks-star: #ffd166;
+      --pks-star-soft: #ffe9b0;
+      --pks-text: #ece6fa;
+      --pks-text-dim: #9b8fc2;
+      --pks-green: #7fd9a8;
+      --pks-red: #ff7e7e;
+      --pks-border: rgba(169,142,232,0.25);
+      --pks-border-green: rgba(127,217,168,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', 'Zen Maru Gothic', sans-serif;
+      color: var(--pks-text);
+      background:
+        radial-gradient(ellipse 600px 300px at 15% 0%, rgba(169,142,232,0.18), transparent 60%),
+        radial-gradient(ellipse 500px 400px at 90% 20%, rgba(255,209,102,0.08), transparent 55%),
+        linear-gradient(180deg, var(--pks-night-deep) 0%, #1d1638 100%);
+      min-height: 100vh;
+      padding: 24px 16px 80px;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(2px 2px at 10% 15%, rgba(255,209,102,0.7), transparent),
+        radial-gradient(2px 2px at 80% 10%, rgba(255,209,102,0.5), transparent),
+        radial-gradient(1.5px 1.5px at 60% 30%, rgba(236,230,250,0.6), transparent),
+        radial-gradient(2px 2px at 30% 60%, rgba(169,142,232,0.5), transparent),
+        radial-gradient(1.5px 1.5px at 90% 70%, rgba(255,209,102,0.4), transparent);
+      z-index: 0;
+    }
+    .pks-wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+
+    .pks-eyebrow {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+      color: var(--pks-star); margin-bottom: 8px;
+    }
+    .pks-eyebrow::before { content: "✦"; font-size: 13px; }
+    h1 { font-family: 'Zen Maru Gothic', sans-serif; font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+    .pks-sub { font-size: 12.5px; color: var(--pks-text-dim); margin-bottom: 22px; line-height: 1.7; }
+
+    /* Step bar */
+    .pks-steps { display: flex; gap: 5px; margin-bottom: 22px; }
+    .pks-step {
+      flex: 1; text-align: center; font-size: 10.5px; font-weight: 800;
+      padding: 7px 2px; border-radius: 10px;
+      border: 1.5px solid var(--pks-border); color: var(--pks-text-dim); letter-spacing: 0.02em;
+    }
+    .pks-step.active { background: linear-gradient(135deg, var(--pks-night-panel), var(--pks-night-panel-2)); border-color: var(--pks-purple); color: var(--pks-text); }
+    .pks-step.done { background: rgba(127,217,168,0.1); border-color: var(--pks-border-green); color: var(--pks-green); }
+
+    /* Panel */
+    .pks-panel {
+      background: linear-gradient(165deg, var(--pks-night-panel) 0%, var(--pks-night-panel-2) 100%);
+      border: 1px solid var(--pks-border); border-radius: 20px; padding: 18px 16px; margin-bottom: 14px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .pks-panel-title { font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 900; color: var(--pks-star-soft); margin-bottom: 14px; }
+
+    /* Form */
+    .field { margin-bottom: 10px; }
+    label { display: block; font-size: 11px; font-weight: 700; color: var(--pks-text-dim); margin-bottom: 4px; }
+    .pks-sw { position: relative; }
+    .pks-sw::after { content: "▾"; position: absolute; right: 11px; top: 50%; transform: translateY(-50%); color: var(--pks-purple); font-size: 11px; pointer-events: none; }
+    select, input[type="number"] {
+      width: 100%; font-family: 'Nunito', sans-serif; font-size: 13.5px; font-weight: 700;
+      color: var(--pks-text); background: rgba(22,16,41,0.6);
+      border: 1.5px solid var(--pks-border); border-radius: 9px; padding: 8px 11px; appearance: none; outline: none;
+    }
+    select:focus, input[type="number"]:focus { border-color: var(--pks-purple); }
+    .pks-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .pks-subs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+    .pks-subs .pks-sw:last-child { grid-column: span 2; }
+
+    /* Composition counter */
+    .pks-comp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .pks-comp-item {
+      background: rgba(22,16,41,0.5);
+      border: 1.5px solid var(--pks-border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .pks-comp-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--pks-text);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .pks-comp-item .pks-comp-emoji { font-size: 18px; display: block; margin-bottom: 4px; }
+    .pks-counter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pks-counter-btn {
+      width: 44px; height: 44px;
+      background: rgba(169,142,232,0.18);
+      border: 1.5px solid var(--pks-border);
+      border-radius: 10px;
+      color: var(--pks-purple);
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      line-height: 1;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(169,142,232,0.3);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .pks-counter-val {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--pks-text);
+      min-width: 24px;
+      text-align: center;
+    }
+    .pks-comp-total {
+      text-align: center;
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+    }
+    .pks-comp-total.ok { background: rgba(127,217,168,0.1); color: var(--pks-green); border: 1px solid var(--pks-border-green); }
+    .pks-comp-total.ng { background: rgba(255,126,126,0.08); color: var(--pks-red); border: 1px solid rgba(255,126,126,0.25); }
+
+    /* Pokémon card */
+    .pks-pokemon-card {
+      background: rgba(22,16,41,0.5);
+      border: 1.5px solid var(--pks-border);
+      border-radius: 13px;
+      padding: 13px;
+      margin-bottom: 10px;
+    }
+    .pks-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .pks-card-label { font-size: 11px; font-weight: 800; color: var(--pks-star); letter-spacing: 0.06em; }
+
+    /* Type colors */
+    .pks-card-label.berry  { color: #f4a36f; }
+    .pks-card-label.ing    { color: var(--pks-star); }
+    .pks-card-label.skill  { color: #a0d4ff; }
+    .pks-card-label.healer { color: var(--pks-green); }
+    .pks-card-label.seling { color: #f4d03f; }
+
+    /* Buttons */
+    .pks-btn-primary {
+      width: 100%; font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px; font-weight: 900;
+      letter-spacing: 0.04em; color: #2a1f4d;
+      background: linear-gradient(135deg, var(--pks-star) 0%, #ffb84d 100%);
+      border: none; border-radius: 12px; padding: 13px; cursor: pointer; margin-top: 6px; display: block;
+    }
+    .pks-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pks-btn-secondary {
+      width: 100%; font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700;
+      color: var(--pks-text); background: rgba(169,142,232,0.12);
+      border: 1.5px solid var(--pks-border); border-radius: 12px; padding: 11px;
+      cursor: pointer; margin-top: 8px; display: block;
+    }
+
+    /* Recipe row */
+    .pks-recipe-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 64px 36px;
+      gap: 6px;
+      align-items: end;
+      margin-bottom: 8px;
+    }
+    .pks-recipe-row input[type="number"] { padding: 8px 8px; }
+    .pks-recipe-remove {
+      background: rgba(255,126,126,0.12); border: 1px solid rgba(255,126,126,0.25);
+      color: var(--pks-red); border-radius: 8px; height: 36px; width: 36px;
+      font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .pks-btn-add {
+      width: 100%; font-family: 'Zen Maru Gothic', sans-serif; font-size: 12.5px; font-weight: 700;
+      color: var(--pks-purple); background: rgba(169,142,232,0.08);
+      border: 1.5px dashed rgba(169,142,232,0.35); border-radius: 11px;
+      padding: 9px; cursor: pointer; margin-top: 4px; display: block;
+    }
+    .pks-remove-btn {
+      background: rgba(255,126,126,0.15);
+      border: 1px solid rgba(255,126,126,0.35);
+      color: var(--pks-red);
+      border-radius: 7px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pks-total-line { text-align: right; font-size: 12px; color: var(--pks-text-dim); margin-top: 8px; }
+    .pks-total-line.ok { color: var(--pks-green); }
+    .pks-total-line.ng { color: var(--pks-red); }
+
+    /* Results */
+    .pks-verdict { text-align: center; padding: 18px 0 14px; }
+    .pks-verdict-main { font-family: 'Zen Maru Gothic', sans-serif; font-size: 26px; font-weight: 900; margin-bottom: 3px; }
+    .pks-verdict-main.ok { color: var(--pks-green); }
+    .pks-verdict-main.ng { color: var(--pks-red); }
+    .pks-verdict-sub { font-size: 12px; color: var(--pks-text-dim); }
+    .pks-ing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 12px; }
+    .pks-ing-card { background: rgba(22,16,41,0.5); border-radius: 10px; padding: 10px 11px; }
+    .pks-ing-name { font-size: 10.5px; color: var(--pks-text-dim); margin-bottom: 4px; }
+    .pks-ing-bar-bg { background: rgba(255,255,255,0.06); border-radius: 4px; height: 4px; margin-bottom: 5px; overflow: hidden; }
+    .pks-ing-bar { height: 100%; border-radius: 4px; }
+    .pks-ing-bar.ok { background: var(--pks-green); }
+    .pks-ing-bar.ng { background: var(--pks-red); }
+    .pks-ing-nums { display: flex; justify-content: space-between; font-size: 11px; }
+    .pks-ing-have.ok { color: var(--pks-green); }
+    .pks-ing-have.ng { color: var(--pks-red); }
+    .pks-ing-need { color: var(--pks-text-dim); }
+    .pks-surplus { background: rgba(127,217,168,0.08); border: 1.5px solid var(--pks-border-green); border-radius: 12px; padding: 13px 15px; margin-top: 12px; }
+    .pks-surplus-label { font-size: 11px; font-weight: 700; color: var(--pks-green); margin-bottom: 4px; }
+    .pks-surplus-val { font-family: 'Zen Maru Gothic', sans-serif; font-size: 24px; font-weight: 900; color: var(--pks-green); }
+    .pks-surplus-desc { font-size: 11.5px; color: var(--pks-text-dim); margin-top: 2px; }
+    .pks-shortage { background: rgba(255,126,126,0.07); border: 1.5px solid rgba(255,126,126,0.28); border-radius: 12px; padding: 13px 15px; margin-top: 12px; }
+    .pks-shortage-label { font-size: 11px; font-weight: 700; color: var(--pks-red); margin-bottom: 6px; }
+    .pks-shortage-item { font-size: 12.5px; color: var(--pks-text-dim); line-height: 1.9; }
+    .pks-extra { background: rgba(169,142,232,0.07); border: 1px solid var(--pks-border); border-radius: 12px; padding: 12px 14px; margin-top: 10px; }
+    .pks-extra-label { font-size: 11px; font-weight: 700; color: var(--pks-purple); margin-bottom: 5px; }
+    .pks-extra-item { font-size: 12px; color: var(--pks-text-dim); line-height: 1.9; }
+
+    .pks-footnote { text-align: center; font-size: 11px; color: var(--pks-text-dim); opacity: 0.6; margin-top: 24px; }
+    .pks-hidden { display: none !important; }
+
+    /* Result section title */
+    .pks-result-section-title {
+      font-size: 11.5px; font-weight: 800; color: var(--pks-text-dim);
+      margin: 12px 0 8px; letter-spacing: 0.03em;
+    }
+
+    /* Per-Pokémon ingredient breakdown */
+    .pks-pb-list { display: flex; flex-direction: column; gap: 8px; }
+    .pks-pb-card {
+      background: rgba(22,16,41,0.5);
+      border: 1.5px solid var(--pks-border);
+      border-radius: 11px;
+      padding: 10px 13px;
+    }
+    .pks-pb-name {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--pks-star-soft);
+      margin-bottom: 7px;
+    }
+    .pks-pb-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; line-height: 1.8;
+    }
+    .pks-pb-ing { color: var(--pks-text-dim); }
+    .pks-pb-val { color: var(--pks-green); font-weight: 700; }
+
+    /* Toggle switch */
+    .pks-toggle-wrap {
+      width: 52px; height: 28px;
+      background: rgba(22,16,41,0.6);
+      border: 1.5px solid var(--pks-border);
+      border-radius: 14px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.25s, border-color 0.25s;
+      flex-shrink: 0;
+    }
+    .pks-toggle-wrap.on {
+      background: rgba(127,217,168,0.3);
+      border-color: var(--pks-green);
+    }
+    .pks-toggle {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 20px; height: 20px;
+      background: var(--pks-text-dim);
+      border-radius: 50%;
+      transition: transform 0.25s, background 0.25s;
+    }
+    .pks-toggle-wrap.on .pks-toggle {
+      transform: translateX(24px);
+      background: var(--pks-green);
+    }
+
+    /* Accordion */
+    .pks-accordion-btn {
+      width: 100%; background: rgba(169,142,232,0.08);
+      border: 1px solid var(--pks-border); border-radius: 8px;
+      color: var(--pks-text-dim); font-size: 11.5px; font-weight: 700;
+      padding: 7px 12px; cursor: pointer; text-align: left;
+      margin-top: 8px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .pks-accordion-btn:hover { border-color: var(--pks-purple); color: var(--pks-text); }
+    .pks-accordion-body { display: none; margin-top: 8px; }
+    .pks-accordion-body.open { display: block; }
+  </style>
+</head>
+<body>
+<div class="pks-wrap">
+  <div class="pks-eyebrow">POKEMON SLEEP TOOLS</div>
+
+  <!-- ★ Prominent nav buttons (Guide / Blog) --->
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;">
+    <a href="guide.html"
+       style="padding:8px 16px;
+              background:#6a4cff;
+              color:#fff;
+              border-radius:8px;
+              font-family:'Zen Maru Gothic',sans-serif;
+              font-size:13px;
+              font-weight:700;
+              text-decoration:none;
+              box-shadow:0 2px 4px rgba(0,0,0,0.2);">
+      Guide
+    </a>
+
+    <a href="https://www.tofumentalpapa.com/entry/pksl_homepage_eng"
+       style="padding:8px 16px;
+              background:#00a86b;
+              color:#fff;
+              border-radius:8px;
+              font-family:'Zen Maru Gothic',sans-serif;
+              font-size:13px;
+              font-weight:700;
+              text-decoration:none;
+              box-shadow:0 2px 4px rgba(0,0,0,0.2);">
+      Blog
+    </a>
+  </div>
+
+  <h1>Ingredient Pokémon Selection Simulator</h1>
+  <p class="pks-sub">A simulator that quantitatively evaluates your criteria for selecting ingredient Pokémon.</p>
+
+  <!-- ★ Duplicate nav below has been removed -->
+</div>
+
+
+
+  <div class="pks-steps">
+    <div class="pks-step active" id="stepTab0">① Team</div>
+    <div class="pks-step" id="stepTab1">② Pokémon</div>
+    <div class="pks-step" id="stepTab2">③ Dishes</div>
+    <div class="pks-step" id="stepTab3">④ Results</div>
+  </div>
+
+  <!-- ===== STEP 0: Team Setup ===== -->
+  <div id="step0">
+    <div class="pks-panel">
+      <div class="pks-panel-title">🧩 Team Composition (5 total)</div>
+      <div class="pks-comp-grid">
+        <div class="pks-comp-item">
+          <span class="pks-comp-emoji">🍒</span>
+          <div class="pks-comp-label">Berry</div>
+          <div class="pks-counter">
+            <button class="pks-counter-btn" onclick="changeComp('berry',-0.5)">−</button>
+            <span class="pks-counter-val" id="compVal_berry">0</span>
+            <button class="pks-counter-btn" onclick="changeComp('berry',0.5)">＋</button>
+          </div>
+        </div>
+        <div class="pks-comp-item">
+          <span class="pks-comp-emoji">🍳</span>
+          <div class="pks-comp-label">Ingredient</div>
+          <div class="pks-counter">
+            <button class="pks-counter-btn" onclick="changeComp('ing',-0.5)">−</button>
+            <span class="pks-counter-val" id="compVal_ing">0</span>
+            <button class="pks-counter-btn" onclick="changeComp('ing',0.5)">＋</button>
+          </div>
+        </div>
+        <div class="pks-comp-item">
+          <span class="pks-comp-emoji">⚡</span>
+          <div class="pks-comp-label">Skill</div>
+          <div class="pks-counter">
+            <button class="pks-counter-btn" onclick="changeComp('skill',-0.5)">−</button>
+            <span class="pks-counter-val" id="compVal_skill">0</span>
+            <button class="pks-counter-btn" onclick="changeComp('skill',0.5)">＋</button>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="pks-comp-total ng" id="compTotal">Total 0 / 5</div>
+    </div>
+    <div class="pks-panel" style="margin-top:0">
+      <div class="pks-panel-title">🎫 Good Camp Ticket</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--pks-text);">Use it</div>
+          <div style="font-size:11px;color:var(--pks-text-dim);margin-top:2px;">Helping Speed ×1.2 (interval ÷1.2)</div>
+        </div>
+        <div class="pks-toggle-wrap" onclick="toggleCamp()" id="campToggleWrap">
+          <div class="pks-toggle" id="campToggle"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pks-panel">
+      <div class="pks-panel-title">😴 Sleep-Time Tap Setting</div>
+      <p style="font-size:12px;color:var(--pks-text-dim);margin-bottom:10px;">
+        Assumes 8.5 hours of sleep per day. While awake (15.5 hours), tapping every minute is assumed, so inventory never overflows.
+      </p>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--pks-text);">Tap every minute during sleep too</div>
+          <div style="font-size:11px;color:var(--pks-text-dim);margin-top:2px;">When OFF, once inventory is full, berry rate becomes 100% (ingredients are lost)</div>
+        </div>
+        <div class="pks-toggle-wrap on" onclick="toggleSleepTap()" id="sleepTapToggleWrap">
+          <div class="pks-toggle" id="sleepTapToggle"></div>
+        </div>
+      </div>
+    </div>
+    <button class="pks-btn-primary" id="btnToStep1" disabled>Next: Register Pokémon →</button>
+<!-- Notes -->
+  <div style="
+    background: rgba(169,142,232,0.08);
+    border: 1px solid rgba(169,142,232,0.3);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--pks-text-dim);
+    line-height: 1.85;
+  ">
+    <div style="font-size:12.5px;font-weight:800;color:var(--pks-star-soft);margin-bottom:8px;">📋 Calculation Assumptions & Notes</div>
+    <div>
+      <b style="color:var(--pks-text);">[Calculation assumptions]</b><br>
+      ・ Assumes energy is always kept at <b style="color:var(--pks-green);">81% or higher</b><br>
+      ・ Assumes <b style="color:var(--pks-green);">tapping every minute</b> (frequent logins)<br>
+      ・ Assumes ingredient inventory never overflows<br>
+      ・ Calculated for 24 hours a day, fully active for 7 days<br>
+    </div>
+    <div style="margin-top:8px;">
+      <b style="color:var(--pks-text);">[About the Helping Speed bonus]</b><br>
+      ・ <b>Helping Speed M (+14%) and Helping Speed S (+7%)</b> only apply to the Pokémon that has them<br>
+      ・ <b>Helping Bonus (+5%)</b> raises the speed of every Pokémon on the team while it's on the team<br>
+      ・ The bonus applied to each Pokémon = its own Helping Speed M/S + the team's total Helping Bonus<br>
+      ・ If this total exceeds <b style="color:var(--pks-star);">35%, it's capped at 35%</b><br>
+      ・ Example: 3 Helping Bonus Pokémon on the team (+15%) + your own Helping Speed M+S (+21%) = 36% → <b>capped at 35%</b><br>
+      ・ Since ingredient Pokémon rotate in and out, Helping Bonus is prorated by (slots ÷ registered Pokémon)<br>
+    </div>
+    <div style="margin-top:8px;">
+      <b style="color:var(--pks-text);">[Other notes]</b><br>
+      ・ Ingredient find rate = base rate × (1 + Ingredient Finder M×36% + S×18%)<br>
+      ・ Using a Good Camp Ticket multiplies Helping Speed by ×1.2<br>
+      ・ Starting-of-week stock (ingredients carried over from last week) can be entered on the dish registration screen<br>
+      ・ These results are estimates and may differ slightly from the actual game
+    </div>
+    <div style="margin-top:8px;">
+      <b style="color:var(--pks-text);">[About inventory overflow]</b><br>
+      ・ 1 day = 15.5 awake hours (tap every minute, no overflow) + 8.5 sleep hours<br>
+      ・ If "tap every minute during sleep" is OFF, once inventory is full,<br>
+      　no more ingredients are gathered and the <b style="color:var(--pks-star);">berry rate becomes 100%</b> (ingredients are lost)<br>
+      ・ Supports the Inventory Up S (+6), M (+12), and L (+18) sub-skills<br>
+      ・ Pokémon with no registered max-inventory data skip the overflow calculation
+    </div>
+    <div style="margin-top:8px;">
+      <b style="color:var(--pks-text);">[About Ingredient Select]</b><br>
+      ・ For Ingredient Select Pokémon, skill level is assumed to be at <b style="color:var(--pks-star);">max level</b><br>
+      ・ With no tapping during sleep, skill activations are calculated as:<br>
+      　up to <b>1/day</b> for Berry/Ingredient types, up to <b>2/day</b> for Skill types<br>
+    </div>
+  </div>
+</div>
+
+  <!-- ===== STEP 1: Register Pokémon ===== -->
+  <div id="step1" class="pks-hidden">
+    <div id="pokemonSections"></div>
+    <button class="pks-btn-secondary" id="btnBack0">← Edit Team</button>
+    <button class="pks-btn-primary" id="btnToStep2">Next: Register Dishes →</button>
+  </div>
+
+  <!-- ===== STEP 2: Register Dishes ===== -->
+  <div id="step2" class="pks-hidden">
+    <div class="pks-panel">
+      <div class="pks-panel-title">🍽️ Register Your 21 Meals</div>
+      <p style="font-size:12px;color:var(--pks-text-dim);margin-bottom:12px;">
+        Choose a category and dish name, then enter the number of servings.
+      </p>
+      <div id="recipeList"></div>
+      <button class="pks-btn-add" id="btnAddRecipe">＋ Add a Dish</button>
+      <div class="pks-total-line ng" id="recipeTotal">Total: 0 meals</div>
+    </div>
+    <div class="pks-panel">
+      <div class="pks-panel-title">📦 Starting-of-Week Ingredient Stock (optional)</div>
+      <p style="font-size:12px;color:var(--pks-text-dim);margin-bottom:12px;">
+        If you have ingredients carried over from last week, enter them here. It's fine to leave this at 0.
+      </p>
+      <div id="stockList"></div>
+      <button class="pks-btn-add" id="btnAddStock">＋ Add Stock</button>
+    </div>
+    <button class="pks-btn-secondary" id="btnBack1">← Edit Pokémon</button>
+    <button class="pks-btn-primary" id="btnToStep3">Calculate →</button>
+</div>
+
+  <!-- ===== STEP 3: Results ===== -->
+  <div id="step3" class="pks-hidden">
+    <div class="pks-panel">
+      <div id="resultContent"></div>
+    </div>
+    <button class="pks-btn-secondary" id="btnBack2">← Edit Dishes</button>
+    <button class="pks-btn-secondary" id="btnRestart">Start Over</button>
+</div>
+
+  <p class="pks-footnote">Tofu Mental Papa's Pokémon Sleep Strategy Tools</p>
+</div>
+
+<script>
+/* ===== Recipe data ===== */
+const RECIPE_DATA = {
+  "genres": ["Curry","Salad","Dessert"],
+  "recipes": {
+    "Curry": {
+      "Fancy Apple Curry": {"Fancy Apple":7},
+      "Grilled Tail Curry": {"Slowpoke Tail":8,"Fiery Herb":25},
+      "\"Solar Power\" Tomato Curry": {"Snoozy Tomato":10,"Fiery Herb":5},
+      "\"Dream Eater\" Butter Curry": {"Soft Potato":18,"Snoozy Tomato":15,"Soothing Cacao":12,"Moomoo Milk":10},
+      "Spicy Leek Curry": {"Large Leek":14,"Warming Ginger":10,"Fiery Herb":8},
+      "\"Spore\" Mushroom Curry": {"Tasty Mushroom":14,"Soft Potato":9},
+      "\"Egg Bomb\" Curry": {"Honey":12,"Fancy Apple":11,"Fancy Egg":8,"Soft Potato":4},
+      "Hearty Cheeseburger Curry": {"Moomoo Milk":8,"Bean Sausage":8},
+      "Soft Potato Chowder": {"Moomoo Milk":10,"Soft Potato":8,"Tasty Mushroom":4},
+      "Simple Chowder": {"Moomoo Milk":7},
+      "Beanburger Curry": {"Bean Sausage":7},
+      "Mild Honey Curry": {"Honey":7},
+      "Ninja Curry": {"Greengrass Soybeans":24,"Bean Sausage":9,"Large Leek":12,"Tasty Mushroom":5},
+      "Greengrass Curry Bread": {"Greengrass Soybeans":8,"Pure Oil":15,"Fiery Herb":20,"Warming Ginger":20},
+      "\"Drought\" Katsu Curry": {"Bean Sausage":10,"Pure Oil":5},
+      "Melty Omelette Curry": {"Fancy Egg":10,"Snoozy Tomato":6},
+      "\"Bulk Up\" Bean Curry": {"Greengrass Soybeans":12,"Bean Sausage":6,"Fiery Herb":4,"Fancy Egg":4},
+      "\"Limber\" Corn Stew": {"Greengrass Corn":14,"Moomoo Milk":8,"Soft Potato":8},
+      "\"Inferno\" Corn Keema Curry": {"Fiery Herb":27,"Bean Sausage":24,"Greengrass Corn":14,"Warming Ginger":12},
+      "\"Dizzy Punch\" Spicy Curry": {"Rousing Coffee":11,"Fiery Herb":11,"Honey":11},
+      "\"Hidden Power\" Perk-Up Stew": {"Greengrass Soybeans":28,"Snoozy Tomato":25,"Tasty Mushroom":23,"Rousing Coffee":16},
+      "\"Cut\" Sukiyaki Curry": {"Large Leek":27,"Bean Sausage":26,"Honey":26,"Fancy Egg":22},
+      "\"Role Play\" Pumpkaboo Stew": {"Plump Pumpkin":10,"Bean Sausage":16,"Soft Potato":18,"Tasty Mushroom":25},
+      "\"Bounce\" Curry Udon": {"Fiery Herb":22,"Bean Sausage":20,"Warming Ginger":39,"Tasty Mushroom":31},
+      "\"Overgrow\" Avocado Gratin": {"Glossy Avocado":22,"Soft Potato":20,"Moomoo Milk":41,"Pure Oil":32}
+    },
+    "Salad": {
+      "Fancy Apple Salad": {"Fancy Apple":8},
+      "Bean Ham Salad": {"Bean Sausage":8},
+      "Snoozy Tomato Salad": {"Snoozy Tomato":8},
+      "\"Snow Cloak\" Caesar Salad": {"Moomoo Milk":10,"Bean Sausage":6},
+      "\"Heat Wave\" Tofu Salad": {"Greengrass Soybeans":10,"Fiery Herb":6},
+      "\"Water Veil\" Tofu Salad": {"Greengrass Soybeans":15,"Snoozy Tomato":9},
+      "\"Fury Attack\" Corn Salad": {"Greengrass Corn":9,"Pure Oil":8},
+      "\"Dazzling\" Apple Cheese Salad": {"Fancy Apple":15,"Moomoo Milk":5,"Pure Oil":3},
+      "\"Immunity\" Leek Salad": {"Large Leek":10,"Warming Ginger":5},
+      "Moomoo Caprese Salad": {"Moomoo Milk":12,"Pure Oil":5,"Snoozy Tomato":6},
+      "\"Superpower\" Extreme Salad": {"Bean Sausage":9,"Soft Potato":3,"Fancy Egg":5,"Warming Ginger":6},
+      "\"Contrary\" Chocolate Meat Salad": {"Soothing Cacao":14,"Bean Sausage":9},
+      "\"Gluttony\" Potato Salad": {"Soft Potato":14,"Fancy Egg":9,"Bean Sausage":7,"Fancy Apple":6},
+      "\"Overheat\" Ginger Salad": {"Fiery Herb":17,"Snoozy Tomato":8,"Warming Ginger":10},
+      "\"Spore\" Mushroom Salad": {"Tasty Mushroom":17,"Snoozy Tomato":8,"Pure Oil":8},
+      "Slowpoke Tail Pepper Salad": {"Slowpoke Tail":10,"Fiery Herb":10,"Pure Oil":15},
+      "\"Calm Mind\" Fruit Salad": {"Fancy Apple":21,"Honey":16,"Greengrass Corn":12},
+      "Ninja Salad": {"Greengrass Soybeans":19,"Large Leek":15,"Warming Ginger":11,"Tasty Mushroom":12},
+      "Greengrass Salad": {"Soft Potato":9,"Pure Oil":22,"Snoozy Tomato":14,"Greengrass Corn":17},
+      "\"Cross Chop\" Salad": {"Bean Sausage":15,"Fancy Egg":20,"Snoozy Tomato":10,"Greengrass Corn":11},
+      "\"Defiant\" Coffee-Dressed Salad": {"Rousing Coffee":28,"Bean Sausage":28,"Pure Oil":22,"Soft Potato":22},
+      "\"Scald\" Chunky Salad": {"Soft Potato":30,"Tasty Mushroom":27,"Greengrass Corn":18,"Plump Pumpkin":20},
+      "\"Bulldoze\" Guacamole and Chips": {"Greengrass Soybeans":22,"Fiery Herb":30,"Greengrass Corn":25,"Glossy Avocado":28},
+      "\"Apple Acid\" Yogurt-Dressed Salad": {"Moomoo Milk":18,"Fancy Apple":28,"Fancy Egg":35,"Snoozy Tomato":23},
+      "\"Petal Blizzard\" Layered Salad": {"Bean Sausage":12,"Soft Potato":15,"Pure Oil":17,"Fancy Egg":25},
+      "Luscious Avocado Salad": {"Glossy Avocado":14,"Greengrass Soybeans":18,"Pure Oil":10}
+    },
+    "Dessert": {
+      "\"Honey Gather\" Chocolate Waffles": {"Honey":38,"Pure Oil":28,"Greengrass Corn":28,"Soothing Cacao":21},
+      "\"Scary Face\" Pancakes": {"Honey":32,"Snoozy Tomato":29,"Fancy Egg":24,"Plump Pumpkin":18},
+      "Clodsire Éclair": {"Soothing Cacao":30,"Moomoo Milk":26,"Rousing Coffee":24,"Honey":22},
+      "\"Zing Zap\" Spiced Cola": {"Fancy Apple":35,"Large Leek":20,"Warming Ginger":20,"Rousing Coffee":12},
+      "\"Flower Gift\" Macarons": {"Fancy Egg":25,"Soothing Cacao":25,"Honey":17,"Moomoo Milk":10},
+      "\"Teatime\" Corn Scone": {"Fancy Apple":20,"Warming Ginger":20,"Greengrass Corn":18,"Moomoo Milk":9},
+      "\"Leaf Tornado\" Smoothie": {"Glossy Avocado":18,"Snoozy Tomato":16,"Moomoo Milk":14},
+      "Jigglypuff's Fruity Flan": {"Honey":20,"Fancy Egg":15,"Fancy Apple":10,"Moomoo Milk":10},
+      "\"Mold Breaker\" Corn Tiramisu": {"Rousing Coffee":14,"Greengrass Corn":14,"Moomoo Milk":12},
+      "\"Early Bird\" Coffee Jelly": {"Rousing Coffee":16,"Honey":12,"Moomoo Milk":14},
+      "\"Explosion\" Popcorn": {"Greengrass Corn":15,"Pure Oil":14,"Moomoo Milk":7},
+      "\"Huge Power\" Soy Donuts": {"Greengrass Soybeans":16,"Pure Oil":12,"Soothing Cacao":7},
+      "Neroli's Restorative Tea": {"Fancy Apple":15,"Warming Ginger":11,"Tasty Mushroom":9},
+      "\"Steadfast\" Ginger Cookies": {"Honey":14,"Warming Ginger":12,"Soothing Cacao":5,"Fancy Egg":4},
+      "\"Sweet Scent\" Chocolate Cake": {"Honey":9,"Soothing Cacao":8,"Moomoo Milk":7},
+      "\"Petal Dance\" Chocolate Tart": {"Fancy Apple":11,"Soothing Cacao":11},
+      "\"Hustle\" Protein Smoothie": {"Greengrass Soybeans":15,"Soothing Cacao":8},
+      "Big Malasada": {"Pure Oil":10,"Moomoo Milk":7,"Honey":6},
+      "\"Stalwart\" Vegetable Juice": {"Snoozy Tomato":9,"Fancy Apple":7},
+      "\"Cloud Nine\" Soy Cake": {"Fancy Egg":8,"Greengrass Soybeans":7},
+      "\"Ember\" Ginger Tea": {"Warming Ginger":9,"Fancy Apple":7},
+      "\"Fluffy\" Sweet Potatoes": {"Soft Potato":9,"Moomoo Milk":5},
+      "\"Lucky Chant\" Apple Pie": {"Fancy Apple":12,"Moomoo Milk":4},
+      "Craft Soda Pop": {"Honey":9},
+      "Fancy Apple Juice": {"Fancy Apple":8},
+      "Warm Moomoo Milk": {"Moomoo Milk":7},
+      "\"Lovely Kiss\" Smoothie": {"Fancy Apple":11,"Moomoo Milk":9,"Soothing Cacao":8,"Honey":7}
+    }
+  }
+};
+
+/* ===== Ingredient name normalization ===== */
+/* Kept as a function (rather than removed) so every call site below still
+   works unchanged. All names are now consistently in English, so this is a
+   straight pass-through; add entries here if any spelling variants turn up. */
+function normIng(n) { return n; }
+
+/* ===== Ingredient display name ===== */
+/* pokemon_data.json now ships English ingredient names directly, so this is a
+   pass-through. Kept as a function so every call site below still works
+   unchanged, and so a display-only override can be added here later if needed. */
+function ingLabel(name) { return name; }
+
+/* Escapes a string for safe use inside an HTML attribute value (e.g. value="...").
+   Needed because several dish names now contain literal double quotes
+   (e.g. "Solar Power" Tomato Curry) which would otherwise break the
+   surrounding <option value="..."> markup and silently corrupt the dropdown. */
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+/* ===== Constants ===== */
+const SUB_SKILLS  = ["Other","Berry Finding S","Helping Speed M","Helping Speed S","Helping Bonus","Ingredient Finder M","Ingredient Finder S","Skill Trigger M","Skill Trigger S","Inventory Up S","Inventory Up M","Inventory Up L"];
+const PATTERNS    = ["aaa","aab","aac","aba","abb","abc"];
+const NATURES_UP  = [["other","Other (no bonus)"],["speedUp","Speed Up"],["foodUp","Ingredients Up"],["skillUp","Skill Up"]];
+const NATURES_DOWN= [["other","Other (no bonus)"],["speedDown","Speed Down"],["foodDown","Ingredients Down"],["skillDown","Skill Down"]];
+const SUB_IDS     = ["sub10","sub25","sub50","sub70","sub80"];
+const SUB_LABELS  = ["Lv10","Lv25","Lv50","Lv70","Lv80"];
+const SLOT_CONFIG = [
+  { key:"berry",  label:"Berry",      emoji:"🍒", cls:"berry",  category:"Berry"      },
+  { key:"ing",    label:"Ingredient", emoji:"🍳", cls:"ing",    category:"Ingredient" },
+  { key:"skill",  label:"Skill",      emoji:"⚡", cls:"skill",  category:"Skill"      }
+];
+
+const WEEK_SECONDS   = 7 * 86400;
+const LEVEL_TIME_COEF= 0.002;
+const BASE_DIVISOR   = 2.222;
+
+/* ===== State ===== */
+let pokemonDB  = [];
+let recipeRows = [];
+let uid = 0;
+
+// Composition count
+const comp = { berry:0, ing:0, skill:0 };
+
+// Good Camp Ticket
+let campTicket = false;
+let sleepTap = true; // default ON (tap every minute = no overflow)
+
+function toggleCamp() {
+  campTicket = !campTicket;
+  const wrap = document.getElementById("campToggle").parentElement;
+  wrap.classList.toggle("on", campTicket);
+}
+
+function toggleSleepTap() {
+  sleepTap = !sleepTap;
+  const wrap = document.getElementById("sleepTapToggle").parentElement;
+  wrap.classList.toggle("on", sleepTap);
+}
+
+// Registered Pokémon slots: [{slotType, slotLabel, prefix}]
+let pokemonSlots = [];
+
+/* ===== Load DB ===== */
+const POKEMON_JSON_URL = "./pokemon_data.json";
+
+async function loadDB() {
+  try {
+    pokemonDB = await (await fetch(POKEMON_JSON_URL)).json();
+    // Check whether maxInventory is included
+    const hasMaxInv = pokemonDB.length > 0 && pokemonDB[0].maxInventory !== undefined;
+    if (!hasMaxInv) {
+      console.warn("⚠️ pokemon_data.json does not include maxInventory. Please upload the latest pokemon_data.json to GitHub.");
+    }
+  }
+  catch(e) { console.warn("Error loading pokemon_data.json:", e); pokemonDB = []; }
+  initEvents();
+}
+
+function initEvents() {
+  document.getElementById("btnToStep1").addEventListener("click", () => {
+    const saved = savePokemonSettings();
+    // Keep the registered count of ingredient Pokémon (it may change when composition changes)
+    const savedIngCount = saved.filter(s => s.slotType === "ing").length;
+    buildPokemonSlots(savedIngCount);
+    restorePokemonSettings(saved);
+    goStep(1);
+  });
+  document.getElementById("btnBack0").addEventListener("click", () => goStep(0));
+  document.getElementById("btnToStep2").addEventListener("click", () => goStep(2));
+  document.getElementById("btnBack1").addEventListener("click", () => goStep(1));
+  document.getElementById("btnToStep3").addEventListener("click", () => goStep(3));
+  document.getElementById("btnBack2").addEventListener("click", () => goStep(2));
+  document.getElementById("btnRestart").addEventListener("click", () => {
+    comp.berry = comp.ing = comp.skill = 0;
+    updateCompUI();
+    recipeRows = [];
+    document.getElementById("recipeList").innerHTML = "";
+    updateRecipeTotal();
+    goStep(0);
+  });
+  document.getElementById("btnAddRecipe").addEventListener("click", addRecipeRow);
+  document.getElementById("btnAddStock").addEventListener("click", addStockRow);
+
+  // Initial recipe row
+  addRecipeRow();
+}
+
+/* ===== Step switching ===== */
+function goStep(n) {
+  ["step0","step1","step2","step3"].forEach((id,i) => {
+    document.getElementById(id).classList.toggle("pks-hidden", i !== n);
+  });
+  ["stepTab0","stepTab1","stepTab2","stepTab3"].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = "pks-step" + (i < n ? " done" : i === n ? " active" : "");
+  });
+  if (n === 3) calculate();
+}
+
+/* ===== Composition counter ===== */
+function changeComp(key, delta) {
+  // Multiply by 10 to avoid floating point errors, compute as integers
+  const cur10  = Math.round(comp[key] * 10);
+  const delta10 = Math.round(delta * 10);
+  const next10 = cur10 + delta10;
+  if (next10 < 0) return;
+
+  const total10 = Math.round((comp.berry + comp.ing + comp.skill) * 10);
+  const newTotal10 = total10 - cur10 + next10;
+  if (newTotal10 > 50) return; // 5.0×10=50
+
+  comp[key] = next10 / 10;
+  updateCompUI();
+}
+
+function updateCompUI() {
+  const total = comp.berry + comp.ing + comp.skill;
+  SLOT_CONFIG.forEach(s => {
+    const el = document.getElementById(`compVal_${s.key}`);
+    if (el) {
+      // Show as an integer if it's a whole number, otherwise show one decimal
+      const v = comp[s.key];
+      el.textContent = (v % 1 === 0) ? v.toFixed(0) : v.toFixed(1);
+    }
+  });
+  const totalEl = document.getElementById("compTotal");
+  const totalDisp = (total % 1 === 0) ? total.toFixed(0) : total.toFixed(1);
+  totalEl.textContent = `Total ${totalDisp} / 5`;
+  const total10 = Math.round(total * 10);
+  totalEl.className = "pks-comp-total " + (total10 === 50 ? "ok" : "ng");
+  document.getElementById("btnToStep1").disabled = (total10 !== 50);
+}
+
+/* ===== Generate Pokémon slots ===== */
+let ingPanel = null; // reference to the ingredient panel
+
+function buildPokemonSlots(ingInitCount) {
+  pokemonSlots = [];
+  ingPanel = null;
+  const section = document.getElementById("pokemonSections");
+  section.innerHTML = "";
+
+  SLOT_CONFIG.forEach(cfg => {
+    const count = comp[cfg.key];
+    if (count === 0) return;
+
+    const panel = document.createElement("div");
+    panel.className = "pks-panel";
+
+    if (cfg.key === "ing" || cfg.key === "selIng") {
+      // Ingredient / Ingredient-select panel: has an add button
+      if (cfg.key === "ing") ingPanel = panel;
+      const panelId = "ingPanelInner"; // shared panel for ingredient / ingredient-select
+      const titleBar = document.createElement("div");
+      titleBar.style.cssText = "display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;";
+      const addBtns = `<button class="pks-btn-add" style="width:auto;margin:0;padding:6px 14px;font-size:12px;" onclick="addIngPokemonCard(null,'${cfg.key}')">＋ Add</button>`;
+      titleBar.innerHTML = `
+        <span class="pks-panel-title" style="margin-bottom:0" id="${cfg.key}PanelTitle">${cfg.emoji} ${cfg.label} Pokémon (Slots: ${count})</span>
+        ${addBtns}
+      `;
+      panel.appendChild(titleBar);
+      panel.setAttribute("id", panelId);
+
+      const initCount = cfg.key === "ing"
+        ? ((ingInitCount && ingInitCount > 0) ? ingInitCount : 4)
+        : Math.max(Math.ceil(count), 2);
+      for (let i = 0; i < initCount; i++) {
+        addIngPokemonCard(panel, cfg.key);
+      }
+    } else {
+      // Fixed slots (Berry / Skill / Healer)
+      const slotCount = comp[cfg.key]; // e.g. 1.5
+      const fullCount = Math.floor(slotCount); // integer part: 1
+      const halfSlot  = Math.round((slotCount - fullCount) * 10) / 10; // decimal part: 0.5
+      const totalCards = fullCount + (halfSlot > 0 ? 1 : 0);
+      const halfLabel  = halfSlot > 0 ? ` (one Pokémon active at ${halfSlot} slot)` : "";
+      panel.innerHTML = `<div class="pks-panel-title">${cfg.emoji} ${cfg.label} Pokémon (${slotCount} slots${halfLabel})</div>`;
+      for (let i = 0; i < totalCards; i++) {
+        const id = uid++;
+        const prefix = `slot_${id}`;
+        // The last Pokémon in a fractional slot uses scale = halfSlot
+        const scale = (halfSlot > 0 && i === totalCards - 1) ? halfSlot : 1.0;
+        pokemonSlots.push({ slotType: cfg.key, prefix, cls: cfg.cls, scale });
+
+        const halfNote = scale < 1 ? ` <span style="font-size:10px;color:var(--pks-text-dim);">(${scale*100}% active)</span>` : "";
+        const card = document.createElement("div");
+        card.className = "pks-pokemon-card";
+        card.innerHTML = `
+          <div class="pks-card-header">
+            <span class="pks-card-label ${cfg.cls}">${cfg.emoji} ${cfg.label} ${i+1}${halfNote}</span>
+          </div>
+          ${pokemonFormHTML(prefix, cfg.category)}
+        `;
+        panel.appendChild(card);
+      }
+    }
+    section.appendChild(panel);
+  });
+}
+
+function addIngPokemonCard(panel, slotKey) {
+  const key = slotKey || "ing";
+  const panelId = key === "ing" ? "ingPanelInner" : "selIngPanelInner";
+  const target = panel || document.getElementById(panelId);
+  if (!target) return;
+
+  const id = uid++;
+  const prefix = `slot_${id}`;
+  const clsName = key === "ing" ? "ing" : "seling";
+  pokemonSlots.push({ slotType: key, prefix, cls: clsName, cardId: id });
+
+  const cfg = SLOT_CONFIG.find(c => c.key === key);
+  const slots = pokemonSlots.filter(s => s.slotType === key);
+  const num = slots.length;
+
+  const card = document.createElement("div");
+  card.className = "pks-pokemon-card";
+  card.id = `ingCard_${id}`;
+  card.innerHTML = `
+    <div class="pks-card-header">
+      <span class="pks-card-label ${clsName}" id="ingCardLabel_${id}">${cfg.emoji} ${cfg.label} ${num}</span>
+      <button class="pks-remove-btn" onclick="removeIngPokemonCard(${id},'${key}')">Delete</button>
+    </div>
+    ${pokemonFormHTML(prefix, cfg.category)}
+  `;
+  target.appendChild(card);
+  updateIngPanelTitle();
+}
+
+
+function removeIngPokemonCard(cardId, slotKey) {
+  const key = slotKey || "ing";
+  const slots = pokemonSlots.filter(s => s.slotType === key);
+  const minCount = key === "ing" ? comp.ing : Math.ceil(comp.selIng);
+  if (slots.length <= minCount) return;
+
+  pokemonSlots = pokemonSlots.filter(s => !(s.slotType === key && s.cardId === cardId));
+  document.getElementById(`ingCard_${cardId}`)?.remove();
+  renumberIngCards();
+  updateIngPanelTitle();
+}
+
+function renumberIngCards() {
+  ["ing", "selIng"].forEach(key => {
+    const cfg = key === "selIng" ? SELING_CFG : SLOT_CONFIG.find(c => c.key === key);
+    if (!cfg) return;
+    pokemonSlots.filter(s => s.slotType === key).forEach((s, i) => {
+      const el = document.getElementById(`ingCardLabel_${s.cardId}`);
+      if (el) el.textContent = `${cfg.emoji} ${cfg.label} ${i+1}`;
+    });
+  });
+}
+
+function updateIngPanelTitle() {
+  const ingCount = pokemonSlots.filter(s => s.slotType === "ing").length;
+  const selIngCount = pokemonSlots.filter(s => s.slotType === "selIng").length;
+  const el = document.getElementById("ingPanelTitle");
+  if (el) el.textContent = `🍳 Ingredient Pokémon (Slots: ${comp.ing} · Ingredient: ${ingCount} · Select: ${selIngCount})`;
+}
+
+/* ===== Pokémon form HTML ===== */
+function optsPokemon(category) {
+  if (!pokemonDB.length) return `<option value="">(no data)</option>`;
+  let filtered;
+  if (category === "selIng") {
+    // Ingredient-select slot: only Pokémon with skillIngredients
+    filtered = pokemonDB.filter(p => p.skillIngredients && p.skillIngredients.length > 0);
+  } else if (category) {
+    filtered = pokemonDB.filter(p => p.category === category);
+  } else {
+    filtered = pokemonDB;
+  }
+  const types = [...new Set(filtered.map(p => p.type))].sort();
+  return types.map(type => {
+    const group = filtered.filter(p => p.type === type);
+    return `<optgroup label="${escHtml(type)}">${group.map(p => `<option value="${escHtml(p.name)}">${escHtml(p.name)}</option>`).join("")}</optgroup>`;
+  }).join("");
+}
+function optsSub() {
+  return SUB_SKILLS.map(s => `<option value="${s}">${s}</option>`).join("");
+}
+function optsNature(list) {
+  return list.map(([v,l]) => `<option value="${v}">${l}</option>`).join("");
+}
+function optsPattern() {
+  return PATTERNS.map(p => `<option value="${p}">${p}</option>`).join("");
+}
+
+function pokemonFormHTML(pre, category) {
+  return `
+    <div class="field">
+      <label>Pokémon</label>
+      <div class="pks-sw"><select id="${pre}_p">${optsPokemon(category)}</select></div>
+    </div>
+    <div class="pks-row2">
+      <div class="field">
+        <label>Level</label>
+        <input type="number" id="${pre}_lv" min="1" max="60" value="50">
+      </div>
+      <div class="field">
+        <label>Ingredient Layout</label>
+        <div class="pks-sw"><select id="${pre}_pat">${optsPattern()}</select></div>
+      </div>
+    </div>
+    <button class="pks-accordion-btn" type="button" onclick="toggleAccordion('${pre}_detail')">
+      <span>Set Nature & Sub-skills</span><span id="${pre}_detail_arrow">▼</span>
+    </button>
+    <div class="pks-accordion-body" id="${pre}_detail">
+      <div class="pks-row2">
+        <div class="field">
+          <label>Nature ↑</label>
+          <div class="pks-sw"><select id="${pre}_nu">${optsNature(NATURES_UP)}</select></div>
+        </div>
+        <div class="field">
+          <label>Nature ↓</label>
+          <div class="pks-sw"><select id="${pre}_nd">${optsNature(NATURES_DOWN)}</select></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Sub-skills (${SUB_LABELS.join(" / ")})</label>
+        <div class="pks-subs">
+          ${SUB_IDS.map(sid => `<div class="pks-sw"><select id="${pre}_${sid}">${optsSub()}</select></div>`).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleAccordion(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '_arrow');
+  if (!body) return;
+  const isOpen = body.classList.toggle('open');
+  if (arrow) arrow.textContent = isOpen ? '▲' : '▼';
+}
+
+/* ===== Stock rows ===== */
+let stockRows = [];
+
+// List of all ingredient names (collected automatically from recipes)
+function getAllIngredientNames() {
+  const names = new Set();
+  for (const genre of Object.values(RECIPE_DATA.recipes)) {
+    for (const recipe of Object.values(genre)) {
+      for (const k of Object.keys(recipe)) names.add(k);
+    }
+  }
+  return [...names].sort();
+}
+
+function buildIngOpts(sel) {
+  return getAllIngredientNames()
+    .map(n => `<option value="${escHtml(n)}"${n===sel?" selected":""}>${escHtml(ingLabel(n))}</option>`)
+    .join("");
+}
+
+function addStockRow() {
+  const id = uid++;
+  stockRows.push(id);
+  const row = document.createElement("div");
+  row.className = "pks-recipe-row";
+  row.id = `sr_${id}`;
+  row.innerHTML = `
+    <div class="field" style="margin:0;grid-column:span 2">
+      <label style="font-size:10px">Ingredient</label>
+      <div class="pks-sw">
+        <select id="si_${id}">${buildIngOpts("")}</select>
+      </div>
+    </div>
+    <div class="field" style="margin:0">
+      <label style="font-size:10px">Quantity</label>
+      <input type="number" id="sq_${id}" min="0" value="0" style="padding:8px 8px">
+    </div>
+    <button class="pks-recipe-remove" onclick="removeStockRow(${id})">✕</button>
+  `;
+  document.getElementById("stockList").appendChild(row);
+}
+
+function removeStockRow(id) {
+  stockRows = stockRows.filter(x => x !== id);
+  document.getElementById(`sr_${id}`)?.remove();
+}
+
+function getStockMap() {
+  const stock = {};
+  for (const id of stockRows) {
+    const name = document.getElementById(`si_${id}`)?.value;
+    const qty  = Number(document.getElementById(`sq_${id}`)?.value || 0);
+    if (name && qty > 0) {
+      const k = normIng(name);
+      stock[k] = (stock[k] ?? 0) + qty;
+    }
+  }
+  return stock;
+}
+
+/* ===== Recipe rows ===== */
+function buildGenreOpts(sel) {
+  return RECIPE_DATA.genres.map(g => `<option value="${escHtml(g)}"${g===sel?" selected":""}>${escHtml(g)}</option>`).join("");
+}
+function buildRecipeOpts(genre) {
+  return Object.keys(RECIPE_DATA.recipes[genre]??{}).map(n => `<option value="${escHtml(n)}">${escHtml(n)}</option>`).join("");
+}
+
+function addRecipeRow() {
+  const id = uid++;
+  recipeRows.push(id);
+  const g0 = RECIPE_DATA.genres[0];
+  const row = document.createElement("div");
+  row.className = "pks-recipe-row";
+  row.id = `rr_${id}`;
+  row.innerHTML = `
+    <div class="field" style="margin:0">
+      <label style="font-size:10px">Category</label>
+      <div class="pks-sw">
+        <select id="rg_${id}" onchange="onGenreChange(${id})">${buildGenreOpts(g0)}</select>
+      </div>
+    </div>
+    <div class="field" style="margin:0">
+      <label style="font-size:10px">Dish</label>
+      <div class="pks-sw">
+        <select id="rn_${id}" onchange="updateRecipeTotal()">${buildRecipeOpts(g0)}</select>
+      </div>
+    </div>
+    <div class="field" style="margin:0">
+      <label style="font-size:10px">Servings</label>
+      <input type="number" id="rc_${id}" min="1" max="21" value="1" onchange="updateRecipeTotal()">
+    </div>
+    <button class="pks-recipe-remove" onclick="removeRecipeRow(${id})">✕</button>
+  `;
+  document.getElementById("recipeList").appendChild(row);
+  updateRecipeTotal();
+}
+
+function onGenreChange(id) {
+  const g = document.getElementById(`rg_${id}`)?.value;
+  const sel = document.getElementById(`rn_${id}`);
+  if (sel && g) sel.innerHTML = buildRecipeOpts(g);
+  updateRecipeTotal();
+}
+
+function removeRecipeRow(id) {
+  recipeRows = recipeRows.filter(x => x !== id);
+  document.getElementById(`rr_${id}`)?.remove();
+  updateRecipeTotal();
+}
+
+function updateRecipeTotal() {
+  const total = recipeRows.reduce((s,id) => s+(Number(document.getElementById(`rc_${id}`)?.value)||0), 0);
+  const el = document.getElementById("recipeTotal");
+  el.textContent = `Total: ${total} meals`;
+  el.className = "pks-total-line " + (total===21?"ok":"ng");
+}
+
+/* ===== Calculation ===== */
+function getEntry(pre) {
+  const name = document.getElementById(`${pre}_p`)?.value;
+  if (!name) return null;
+  const pokemon = pokemonDB.find(p => p.name === name);
+  if (!pokemon) return null;
+  return {
+    pokemon,
+    level:     Number(document.getElementById(`${pre}_lv`)?.value||50),
+    pattern:   document.getElementById(`${pre}_pat`)?.value||"aab",
+    natureUp:  document.getElementById(`${pre}_nu`)?.value||"other",
+    natureDown:document.getElementById(`${pre}_nd`)?.value||"other",
+    subs: SUB_IDS.map(sid => document.getElementById(`${pre}_${sid}`)?.value||"Other")
+  };
+}
+
+function calcWeekly(entry, teamOtebonus = 0) {
+  // teamOtebonus: sum of (Helping Bonus Pokémon on the team) × 5%
+  if (!entry) return {};
+  const {pokemon, level, pattern, natureUp, natureDown, subs} = entry;
+
+  // ── Filter by sub-skill unlock level ──
+  // Lv10: slot 1, Lv25: slot 2, Lv50: slot 3, Lv70: slot 4, Lv80: slot 5
+  const SUB_UNLOCK = [10, 25, 50, 70, 80];
+  const activeSubs = subs.filter((_, i) => level >= SUB_UNLOCK[i]);
+
+  // ── Helping time adjustment ──
+  const speedM = activeSubs.filter(s => s === "Helping Speed M").length;
+  const speedS = activeSubs.filter(s => s === "Helping Speed S").length;
+
+  let tf = 1.0;
+  if (natureUp   === "speedUp")   tf *= 0.9;
+  if (natureDown === "speedDown") tf *= 1.075;
+
+  // Helping Speed bonus:
+  // own Helping Speed M×14% + Helping Speed S×7% + team's total Helping Bonus
+  // summed together, capped at 35%, applied to shorten the interval
+  const personalBonus = speedM * 0.14 + speedS * 0.07;
+  const totalBonus = Math.min(personalBonus + teamOtebonus, 0.35);
+  tf *= (1 - totalBonus);
+
+  // Effective helping time
+  const levelCoef = 1 - (level - 1) * LEVEL_TIME_COEF;
+  // Good Camp Ticket: speed ×1.2 = interval ÷1.2
+  const campCoef = campTicket ? (1 / 1.2) : 1.0;
+  const interval  = (pokemon.helpTime * levelCoef * tf * campCoef) / BASE_DIVISOR;
+  const hpw       = WEEK_SECONDS / interval; // Helps per week
+
+  // ── Ingredient find rate ──
+  // Correct formula: base fr × (1 + 0.36×M + 0.18×S) × nature modifier
+  // Note: sub-skills add together, then multiply with the base fr (verified against the wiki)
+  const foodM = activeSubs.filter(s => s === "Ingredient Finder M").length;
+  const foodS = activeSubs.filter(s => s === "Ingredient Finder S").length;
+  let fr = (pokemon.ingredientFindRate ?? 0) / 100;
+  fr *= (1 + 0.36 * foodM + 0.18 * foodS);
+  // Nature modifier (multiplicative)
+  if (natureUp   === "foodUp")   fr *= 1.2;
+  if (natureDown === "foodDown") fr *= 0.8;
+  fr = Math.max(0, Math.min(1, fr));
+
+  // ── Skill trigger rate ──
+  // base skillRate × (1 + 0.36×Skill Trigger M + 0.18×Skill Trigger S) × nature modifier
+  const skillM = activeSubs.filter(s => s === "Skill Trigger M").length;
+  const skillS = activeSubs.filter(s => s === "Skill Trigger S").length;
+  let skillRate = (pokemon.skillRate ?? 0) / 100;
+  skillRate *= (1 + 0.36 * skillM + 0.18 * skillS);
+  if (natureUp   === "skillUp")   skillRate *= 1.1;
+  if (natureDown === "skillDown") skillRate *= 0.9;
+  skillRate = Math.max(0, skillRate);
+
+  // ── Ingredient slots ──
+  const slots = level < 30 ? [1] : level < 60 ? [1, 2] : [1, 2, 3];
+  const sp = 1 / slots.length; // slot distribution coefficient
+
+  // Average ingredient count per Help (summed across all slots)
+  let avgIngPerHelp = 0;
+  const slotIngMap = {}; // slot -> {ing, cnt}
+  for (const slot of slots) {
+    let ing = null, cnt = 0;
+    if (slot === 1) {
+      ing = pokemon.ingredientA;
+      cnt = pokemon["1a"] ?? 0;
+    } else if (slot === 2) {
+      const t = pattern[1];
+      ing = t === "a" ? pokemon.ingredientA : pokemon.ingredientB;
+      cnt = t === "a" ? (pokemon["2a"] ?? 0) : (pokemon["2b"] ?? 0);
+    } else {
+      const t = pattern[2];
+      if      (t === "a") { ing = pokemon.ingredientA; cnt = pokemon["3a"] ?? 0; }
+      else if (t === "b") { ing = pokemon.ingredientB; cnt = pokemon["3b"] ?? 0; }
+      else                { ing = pokemon.ingredientC; cnt = pokemon["3c"] ?? 0; }
+    }
+    slotIngMap[slot] = { ing, cnt };
+    if (ing && cnt > 0) avgIngPerHelp += cnt * sp;
+  }
+
+  // ── Max inventory (base value + sub-skill bonus) ──
+  const invS = activeSubs.filter(s => s === "Inventory Up S").length;
+  const invM = activeSubs.filter(s => s === "Inventory Up M").length;
+  const invL = activeSubs.filter(s => s === "Inventory Up L").length;
+  const invBonus = invS * 6 + invM * 12 + invL * 18;
+  const maxInventory = (pokemon.maxInventory != null)
+    ? pokemon.maxInventory + invBonus
+    : null;
+
+  // Amount of berries per Help
+  // Berry type = 2/Help, Ingredient/Skill type = 1/Help, +1 with Berry Finding S
+  const berryNumS = activeSubs.filter(s => s === "Berry Finding S").length;
+  const berryPerHelp = (pokemon.category === "Berry" ? 2 : 1) + berryNumS;
+
+  // ── Inventory overflow calculation ──
+  // [Correct formula (Yuki's method)]
+  // avgPerHelp = berries×(1-fr) + average ingredient count×fr
+  // helpsUntilFull = maxInventory ÷ avgPerHelp  → Helps until inventory is full
+  //
+  // Awake (15.5h): tap every minute is assumed → never overflows
+  //   ingredient gain = awakeHelps × fr × ingredients/Help
+  //
+  // Asleep (8.5h):
+  //   sleepTap=ON  → no overflow (normal calculation)
+  //   sleepTap=OFF → gathers ingredients up to helpsUntilFull, berries only after that
+  //   sleep ingredient gain = min(sleepHelps, helpsUntilFull) × fr × ingredients/Help
+
+  const AWAKE_SECONDS = 15.5 * 3600;
+  const SLEEP_SECONDS = 8.5 * 3600;
+
+  // Average accumulated amount per Help (berries + ingredients combined)
+  const avgPerHelp = (1 - fr) * berryPerHelp + fr * avgIngPerHelp;
+
+  // ── Ingredient Select skill calculation ──
+  // Skill trigger count = hpw × skillRate% / 100
+  // If no tapping during sleep:
+  //   Berry/Ingredient types = capped at 1/day (up to 7/week)
+  //   Skill types           = capped at 2/day (up to 14/week)
+  const skillIngResult = {};
+  if (pokemon.skillIngredients && pokemon.skillIngredients.length > 0
+      && pokemon.skillIngCount > 0 && pokemon.skillRate > 0) {
+
+    // ── Skill trigger count calculation ──
+    const AWAKE_SECS = 15.5 * 3600;
+    const SLEEP_SECS = 8.5 * 3600;
+    let skillTriggers;
+    let skillTriggersAwake7 = 0;  // weekly triggers while awake (for display)
+    let skillTriggersSleep7 = 0;  // weekly triggers while asleep (for display)
+
+    if (sleepTap) {
+      // Tapping every minute: no 24h cap
+      skillTriggers = hpw * skillRate;
+      skillTriggersAwake7 = skillTriggers;
+    } else {
+      // Awake (15.5h): no cap
+      const awakeHelpsPerWeek = AWAKE_SECS / interval * 7;
+      skillTriggersAwake7 = awakeHelpsPerWeek * skillRate;
+
+      // Asleep (8.5h): Helps until inventory overflows × skillRate
+      // → use the smaller of this or the cap (2/day for Skill type, 1/day for Berry/Ingredient)
+      const sleepHelpsPerNight = SLEEP_SECS / interval;
+      let sleepHelpsEffective = sleepHelpsPerNight;
+      if (maxInventory != null && maxInventory > 0 && avgPerHelp > 0) {
+        const helpsUntilFull = maxInventory / avgPerHelp;
+        sleepHelpsEffective = Math.min(sleepHelpsPerNight, helpsUntilFull);
+      }
+      const sleepMaxPerNight = (pokemon.category === "Skill") ? 2 : 1;
+      const sleepTriggersCalc = sleepHelpsEffective * skillRate; // expected value
+      const sleepTriggersCapped = Math.min(sleepTriggersCalc, sleepMaxPerNight); // apply cap
+      skillTriggersSleep7 = sleepTriggersCapped * 7;
+
+      skillTriggers = skillTriggersAwake7 + skillTriggersSleep7;
+    }
+
+    const ingPerTrigger = pokemon.skillIngCount / pokemon.skillIngredients.length;
+    for (const ingName of pokemon.skillIngredients) {
+      const k = normIng(ingName);
+      skillIngResult[k] = (skillIngResult[k] ?? 0) + skillTriggers * ingPerTrigger;
+    }
+  }
+
+  const result = {};
+  for (const slot of slots) {
+    const { ing, cnt } = slotIngMap[slot];
+    if (!ing || cnt <= 0) continue;
+    const k = normIng(ing);
+
+    if (!sleepTap && maxInventory != null && maxInventory > 0 && avgPerHelp > 0) {
+      // Overflow-aware mode
+      const awakeHelps     = AWAKE_SECONDS / interval;  // Helps while awake / day
+      const sleepHelps     = SLEEP_SECONDS / interval;  // Helps while asleep / day
+      const helpsUntilFull = maxInventory / avgPerHelp; // Helps until full
+
+      // Effective sleep Helps (no more ingredients once full)
+      const effectiveSleepHelps = Math.min(sleepHelps, helpsUntilFull);
+
+      // Daily ingredient gain
+      const dailyIng = (awakeHelps + effectiveSleepHelps) * fr * cnt * sp;
+
+      // Weekly gain
+      result[k] = (result[k] ?? 0) + dailyIng * 7;
+    } else {
+      // No-overflow mode (normal calculation)
+      result[k] = (result[k] ?? 0) + hpw * fr * cnt * sp;
+    }
+  }
+  // Merge skill ingredients into result
+  for (const [k, v] of Object.entries(skillIngResult)) {
+    result[k] = (result[k] ?? 0) + v;
+  }
+  return result;
+}
+
+/* ===== Save/restore Pokémon settings ===== */
+function savePokemonSettings() {
+  const saved = [];
+  for (const slot of pokemonSlots) {
+    const pre = slot.prefix;
+    const entry = {
+      slotType: slot.slotType,
+      cardId: slot.cardId,
+      p:    document.getElementById(`${pre}_p`)?.value    ?? "",
+      lv:   document.getElementById(`${pre}_lv`)?.value   ?? "50",
+      pat:  document.getElementById(`${pre}_pat`)?.value  ?? "aab",
+      nu:   document.getElementById(`${pre}_nu`)?.value   ?? "other",
+      nd:   document.getElementById(`${pre}_nd`)?.value   ?? "other",
+      subs: SUB_IDS.map(sid => document.getElementById(`${pre}_${sid}`)?.value ?? "Other")
+    };
+    saved.push(entry);
+  }
+  return saved;
+}
+
+function restorePokemonSettings(saved) {
+  if (!saved || saved.length === 0) return;
+  // Restore in order to slots with matching slotType
+  const byType = {};
+  for (const s of saved) {
+    if (!byType[s.slotType]) byType[s.slotType] = [];
+    byType[s.slotType].push(s);
+  }
+  const typeCounters = {};
+  for (const slot of pokemonSlots) {
+    const t = slot.slotType;
+    if (!typeCounters[t]) typeCounters[t] = 0;
+    const idx = typeCounters[t]++;
+    const data = byType[t]?.[idx];
+    if (!data) continue;
+    const pre = slot.prefix;
+    const pEl = document.getElementById(`${pre}_p`);
+    if (pEl && data.p) pEl.value = data.p;
+    const lvEl = document.getElementById(`${pre}_lv`);
+    if (lvEl) lvEl.value = data.lv;
+    const patEl = document.getElementById(`${pre}_pat`);
+    if (patEl) patEl.value = data.pat;
+    const nuEl = document.getElementById(`${pre}_nu`);
+    if (nuEl) nuEl.value = data.nu;
+    const ndEl = document.getElementById(`${pre}_nd`);
+    if (ndEl) ndEl.value = data.nd;
+    SUB_IDS.forEach((sid, i) => {
+      const el = document.getElementById(`${pre}_${sid}`);
+      if (el && data.subs[i]) el.value = data.subs[i];
+    });
+    // Open the accordion if there are settings
+    const hasDetail = data.nu !== "other" || data.nd !== "other" || data.subs.some(s => s !== "Other");
+    if (hasDetail) {
+      const body = document.getElementById(`${pre}_detail`);
+      const arrow = document.getElementById(`${pre}_detail_arrow`);
+      if (body) { body.classList.add("open"); }
+      if (arrow) arrow.textContent = "▲";
+    }
+  }
+}
+
+// Calculate skill trigger count info (for display)
+function calcSkillTriggersInfo(entry, teamOtebonus) {
+  if (!entry) return null;
+  const {pokemon, level, subs, natureUp, natureDown} = entry;
+  if (!pokemon.skillIngredients || pokemon.skillIngredients.length === 0) return null;
+
+  const SUB_UNLOCK = [10, 25, 50, 70, 80];
+  const activeSubs = subs.filter((_, i) => level >= SUB_UNLOCK[i]);
+  const skillM = activeSubs.filter(s => s === "Skill Trigger M").length;
+  const skillS = activeSubs.filter(s => s === "Skill Trigger S").length;
+  let skillRate = (pokemon.skillRate ?? 0) / 100;
+  skillRate *= (1 + 0.36 * skillM + 0.18 * skillS);
+  if (natureUp === "skillUp")   skillRate *= 1.1;
+  if (natureDown === "skillDown") skillRate *= 0.9;
+  skillRate = Math.max(0, skillRate);
+
+  const LEVEL_TIME_COEF = 0.002;
+  const BASE_DIVISOR = 2.222;
+  const WEEK_SECONDS = 7 * 86400;
+  const levelCoef = 1 - (level - 1) * LEVEL_TIME_COEF;
+
+  // Helping Speed modifier
+  const speedM = activeSubs.filter(s => s === "Helping Speed M").length;
+  const speedS = activeSubs.filter(s => s === "Helping Speed S").length;
+  const oteBonus = activeSubs.filter(s => s === "Helping Bonus").length;
+  let tf = 1.0;
+  if (natureUp === "speedUp") tf *= 0.9;
+  if (natureDown === "speedDown") tf *= 1.075;
+  tf *= Math.pow(0.86, speedM);
+  tf *= Math.pow(0.93, speedS);
+  tf *= (1 - Math.min(teamOtebonus, 0.35));
+  const campCoef = campTicket ? (1 / 1.2) : 1.0;
+  const interval = (pokemon.helpTime * levelCoef * tf * campCoef) / BASE_DIVISOR;
+  const hpw = WEEK_SECONDS / interval;
+
+  const AWAKE_SECS = 15.5 * 3600;
+  const SLEEP_SECS = 8.5 * 3600;
+
+  if (sleepTap) {
+    const total = hpw * skillRate;
+    return { total, awake: total, sleep: null };
+  } else {
+    const awakeHelpsPerWeek = AWAKE_SECS / interval * 7;
+    const awake = awakeHelpsPerWeek * skillRate;
+
+    // Account for inventory overflow
+    const fr = (pokemon.ingredientFindRate ?? 0) / 100;
+    const berryPerHelp = (pokemon.category === "Berry" ? 2 : 1);
+    const slots = level < 30 ? [1] : level < 60 ? [1,2] : [1,2,3];
+    let avgIng = 0;
+    for (const slot of slots) {
+      let cnt = 0;
+      if (slot === 1) cnt = pokemon["1a"] ?? 0;
+      else if (slot === 2) cnt = pokemon["2a"] ?? 0;
+      else cnt = pokemon["3a"] ?? 0;
+      avgIng += cnt / slots.length;
+    }
+    const avgPerHelp = (1 - fr) * berryPerHelp + fr * avgIng;
+    const maxInv = pokemon.maxInventory != null ? pokemon.maxInventory : null;
+
+    const sleepHelpsPerNight = SLEEP_SECS / interval;
+    let sleepHelpsEff = sleepHelpsPerNight;
+    if (maxInv && avgPerHelp > 0) {
+      sleepHelpsEff = Math.min(sleepHelpsPerNight, maxInv / avgPerHelp);
+    }
+    const sleepMax = (pokemon.category === "Skill") ? 2 : 1;
+    const sleepCalc = sleepHelpsEff * skillRate;
+    const sleepCapped = Math.min(sleepCalc, sleepMax);
+    const sleep = sleepCapped * 7;
+    return { total: awake + sleep, awake, sleep, sleepMax };
+  }
+}
+
+function mergeIng(a,b) {
+  const r={...a};
+  for (const [k,v] of Object.entries(b)) r[k]=(r[k]??0)+v;
+  return r;
+}
+
+// Pure ingredient gain assuming full-day activity and always-max energy
+function calcDaily(entry, teamOtebonus = 0) {
+  if (!entry) return {};
+  const result = calcWeekly(entry, teamOtebonus);
+  const daily = {};
+  for (const [k,v] of Object.entries(result)) daily[k] = v / 7;
+  return daily;
+}
+
+function calcIngPokemonSchedule(ingEntries, ingSlotCount, dailyNeed) {
+  // [Algorithm]
+  // 1. Assign the most efficient Pokémon as the "owner" for each ingredient
+  // 2. Calculate how many days of activity are needed to meet that ingredient's requirement
+  // 3. Only activate for the number of days needed (within total activity ≤ slots × 7 days)
+  // This gathers every ingredient in a balanced way without producing surplus
+
+  const totalDays = 7;
+  const n = ingEntries.length;
+  const workDays = new Array(n).fill(0);
+  if (n === 0) return workDays;
+
+  const needKeys = Object.keys(dailyNeed);
+  if (needKeys.length === 0) {
+    const scale = Math.min(1, ingSlotCount / n);
+    return workDays.map(() => totalDays * scale);
+  }
+
+  // Each Pokémon's daily ingredient gain
+  const dailyRates = ingEntries.map(({weekly}) => {
+    const d = {};
+    for (const [k,v] of Object.entries(weekly)) d[k] = v / 7;
+    return d;
+  });
+
+  // Weekly requirement
+  const weeklyNeed = {};
+  for (const k of needKeys) weeklyNeed[k] = dailyNeed[k] * totalDays;
+
+  // ── STEP 1: Decide which Pokémon is responsible for each ingredient ──
+  // Assign each ingredient to the Pokémon that gathers it most efficiently
+  const pokemonReqDays = new Array(n).fill(0);
+
+  for (const k of needKeys) {
+    if (weeklyNeed[k] <= 0) continue;
+    // Among Pokémon that can gather this ingredient, pick the one with the highest rate
+    let bestIdx = -1, bestRate = 0;
+    for (let i = 0; i < n; i++) {
+      const rate = dailyRates[i][k] ?? 0;
+      if (rate > bestRate) { bestRate = rate; bestIdx = i; }
+    }
+    if (bestIdx < 0) continue;
+    // Update the responsible Pokémon's required active days (+0.5% margin for floating-point safety)
+    const daysNeeded = (weeklyNeed[k] / bestRate) * 1.005;
+    pokemonReqDays[bestIdx] = Math.max(pokemonReqDays[bestIdx], daysNeeded);
+  }
+
+  // ── STEP 2: Activate each Pokémon for its required number of days ──
+  // If total activity exceeds slots × 7 days, scale down proportionally
+  const totalReq = pokemonReqDays.reduce((s, d) => s + d, 0);
+  const maxTotal = ingSlotCount * totalDays;
+
+  if (totalReq <= maxTotal) {
+    // Slots have room: activate for exactly the days needed
+    for (let i = 0; i < n; i++) {
+      workDays[i] = Math.min(pokemonReqDays[i], totalDays);
+    }
+  } else {
+    // Not enough slots: scale down proportionally (everyone is reduced by the same ratio)
+    const scale = maxTotal / totalReq;
+    for (let i = 0; i < n; i++) {
+      workDays[i] = Math.min(pokemonReqDays[i] * scale, totalDays);
+    }
+  }
+
+  return workDays;
+}
+
+
+function calculate() {
+  // ── Tally the team's Helping Bonus ──
+  let teamOtebonusRaw = 0;
+
+  const SUB_UNLOCK_LEVELS = [10, 25, 50, 70, 80];
+  for (const slot of pokemonSlots.filter(s => s.slotType !== "ing")) {
+    const e = getEntry(slot.prefix);
+    if (!e) continue;
+    const scale = slot.scale ?? 1.0;
+    const activeSubs = e.subs.filter((_, i) => e.level >= SUB_UNLOCK_LEVELS[i]);
+    teamOtebonusRaw += activeSubs.filter(s => s === "Helping Bonus").length * 0.05 * scale;
+  }
+
+  // Rotation calculated over ingredient slots + ingredient-select slots combined
+  const ingSlotCount = comp.ing;
+  const ingPokemons = pokemonSlots.filter(s => s.slotType === "ing" || s.slotType === "selIng");
+  const ingN = ingPokemons.length;
+  if (ingN > 0) {
+    const ingScale = Math.min(1, ingSlotCount / ingN);
+    for (const slot of ingPokemons) {
+      const e = getEntry(slot.prefix);
+      if (!e) continue;
+      const activeSubsIng = e.subs.filter((_, i) => e.level >= SUB_UNLOCK_LEVELS[i]);
+      teamOtebonusRaw += activeSubsIng.filter(s => s === "Helping Bonus").length * 0.05 * ingScale;
+    }
+  }
+  const teamOtebonus = teamOtebonusRaw;
+
+  // ── STEP 1: First calculate a week's worth of stock + Berry/Skill Pokémon ──
+  // These run full-time without rotating, so they're guaranteed
+  const stockMap = getStockMap();
+  let haveFixed = { ...stockMap }; // starting-of-week stock
+  const perPokemon = [];
+
+  for (const slot of pokemonSlots.filter(s => s.slotType !== "ing")) {
+    const e = getEntry(slot.prefix);
+    if (!e) continue;
+    const weekly = calcWeekly(e, teamOtebonus);
+    const scale = slot.scale ?? 1.0;
+    const scaledWeekly = {};
+    for (const [k, v] of Object.entries(weekly)) scaledWeekly[k] = v * scale;
+    haveFixed = mergeIng(haveFixed, scaledWeekly);
+    const displayDaily = calcDaily(e, teamOtebonus);
+    const workDaysFixed = 7 * scale;
+    const skillInfo = calcSkillTriggersInfo(e, teamOtebonus);
+    perPokemon.push({ name: e.pokemon.name, slotType: slot.slotType, daily: displayDaily, workDays: workDaysFixed, skillInfo });
+  }
+
+  // ── STEP 2: Calculate the requirement for 21 meals ──
+  const need = {};
+  for (const id of recipeRows) {
+    const genre = document.getElementById(`rg_${id}`)?.value;
+    const name  = document.getElementById(`rn_${id}`)?.value;
+    const count = Number(document.getElementById(`rc_${id}`)?.value || 0);
+    if (!genre || !name || count === 0) continue;
+    const recipe = RECIPE_DATA.recipes[genre]?.[name];
+    if (!recipe) continue;
+    for (const [ing, perR] of Object.entries(recipe)) {
+      const k = normIng(ing);
+      need[k] = (need[k] ?? 0) + perR * count;
+    }
+  }
+
+  // ── STEP 3: Subtract stock + Berry/Skill amounts to get the remainder ingredient Pokémon need to gather ──
+  const needAfterFixed = {};
+  for (const k of Object.keys(need)) {
+    const remaining = (need[k] ?? 0) - (haveFixed[k] ?? 0);
+    if (remaining > 0) needAfterFixed[k] = remaining;
+    // if 0 or less it's already covered → no ingredient Pokémon needed for it
+  }
+  const dailyNeedForIng = {};
+  for (const [k, v] of Object.entries(needAfterFixed)) dailyNeedForIng[k] = v / 7;
+
+  // ── STEP 4: Calculate the optimal activity schedule for ingredient Pokémon ──
+  const ingEntries = [];
+  for (const slot of ingPokemons) {
+    const e = getEntry(slot.prefix);
+    if (!e) continue;
+    ingEntries.push({ slot, entry: e, weekly: calcWeekly(e, teamOtebonus) });
+  }
+
+  const workDays = calcIngPokemonSchedule(ingEntries, ingSlotCount, dailyNeedForIng);
+
+  // ── STEP 5: Add up ingredient Pokémon's gains ──
+  let have = { ...haveFixed };
+
+  ingEntries.forEach(({ entry: e }, i) => {
+    const scale = workDays[i] / 7;
+    const weekly = ingEntries[i].weekly;
+    const scaledWeekly = {};
+    for (const [k, v] of Object.entries(weekly)) scaledWeekly[k] = v * scale;
+    have = mergeIng(have, scaledWeekly);
+    const displayDaily = calcDaily(e, teamOtebonus);
+    const skillInfo = calcSkillTriggersInfo(e, teamOtebonus);
+    perPokemon.push({ name: e.pokemon.name, slotType: "ing", daily: displayDaily, workDays: workDays[i], skillInfo });
+  });
+
+  // ── STEP 6: Determine sufficiency ──
+  const needKeys = Object.keys(need);
+  let allOk = true, minRatio = Infinity;
+  for (const k of needKeys) {
+    const ratio = (have[k] ?? 0) / need[k];
+    if (ratio < 1) allOk = false;
+    if (ratio < minRatio) minRatio = ratio;
+  }
+  if (needKeys.length === 0) { minRatio = 1; allOk = true; }
+
+  // Surplus ingredients
+  const surplus = {};
+  for (const [k, v] of Object.entries(have)) {
+    const leftover = v - (need[k] ?? 0);
+    if (leftover > 0.05) surplus[k] = leftover;
+  }
+
+  const surplusDays = allOk ? 7 * (minRatio - 1) : 0;
+  // Actual days needed = total ingredient-Pokémon active days / number of ingredient slots
+  const totalIngWorkDays = workDays.reduce((s, d) => s + d, 0);
+  const actualDays = ingSlotCount > 0 && workDays.length > 0
+    ? totalIngWorkDays / ingSlotCount
+    : (allOk ? 7 * (1/minRatio) : 7 / minRatio);
+
+  renderResult(have, need, surplus, perPokemon, allOk, minRatio, surplusDays, stockMap, teamOtebonus, actualDays);
+}
+
+
+function renderResult(have, need, surplus, perPokemon, allOk, minRatio, surplusDays, stockMap={}, teamOtebonus=0, actualDays=null) {
+  const needKeys = Object.keys(need);
+
+  // Ingredient sufficiency bar
+  const ingHtml = needKeys.map(k => {
+    const h=have[k]??0, n=need[k];
+    const ok=h>=n;
+    const pct=Math.round(Math.min(h/n,1)*100);
+    return `<div class="pks-ing-card">
+      <div class="pks-ing-name">${ingLabel(k)}</div>
+      <div class="pks-ing-bar-bg"><div class="pks-ing-bar ${ok?"ok":"ng"}" style="width:${pct}%"></div></div>
+      <div class="pks-ing-nums">
+        <span class="pks-ing-have ${ok?"ok":"ng"}">${h.toFixed(1)}</span>
+        <span class="pks-ing-need">Needed: ${n}</span>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Days until all ingredients are ready
+  // If achievable: use actualDays (actual active days)
+  // If not achievable: 7 / minRatio (days needed at the current gathering pace)
+  let daysNeeded;
+  if (allOk) {
+    daysNeeded = actualDays !== null ? actualDays : (needKeys.length > 0 ? (7 / minRatio) : 0);
+  } else {
+    // If short: requirement / daily gathering pace = days needed
+    // minRatio = have/need, so days needed = 7 / minRatio
+    daysNeeded = needKeys.length > 0 ? (7 / minRatio) : 7;
+  }
+
+  // Time buffer or shortfall
+  let detailHtml = "";
+  if (allOk) {
+    detailHtml = `<div class="pks-surplus">
+      <div class="pks-surplus-label">⏱ Days Until All Ingredients Are Ready</div>
+      <div class="pks-surplus-val">${daysNeeded.toFixed(1)} days</div>
+      <div class="pks-surplus-desc">
+        You can comfortably prepare everything within 7 days.<br>
+        Buffer: ${(7 - daysNeeded).toFixed(1)} days / Fulfillment: ${(minRatio*100).toFixed(0)}%
+      </div>
+    </div>`;
+  } else {
+    const shortages = needKeys
+      .filter(k=>(have[k]??0)<need[k])
+      .map(k=>`・${ingLabel(k)}: short by ${(need[k]-(have[k]??0)).toFixed(1)}`)
+      .join("<br>");
+    detailHtml = `<div class="pks-shortage">
+      <div class="pks-shortage-label">⏱ Days Needed to Gather All Ingredients</div>
+      <div style="font-family:'Zen Maru Gothic',sans-serif;font-size:26px;font-weight:900;color:var(--pks-red);margin:4px 0;">${daysNeeded.toFixed(1)} days needed</div>
+      <div class="pks-shortage-item" style="margin-top:8px;">
+        <b style="color:var(--pks-red);">⚠️ Ingredients in Short Supply</b><br>
+        ${shortages}
+      </div>
+    </div>`;
+  }
+
+  // Per-Pokémon ingredient breakdown (per day)
+  const slotEmoji = { berry:"🍒", ing:"🍳", selIng:"🎯", skill:"⚡" };
+  const pbHtml = perPokemon.map(p => {
+    const workNote = p.slotType === "ing"
+      ? `<span style="font-size:10px;color:var(--pks-text-dim);margin-left:6px;">Active ${p.workDays.toFixed(1)} days/week</span>`
+      : `<span style="font-size:10px;color:var(--pks-text-dim);margin-left:6px;"></span>`;
+    const lines = Object.entries(p.daily)
+      .filter(([,v])=>v>0.01)
+      .map(([k,v])=>`<div class="pks-pb-row"><span class="pks-pb-ing">${ingLabel(k)}</span><span class="pks-pb-val">${v.toFixed(2)}/day</span></div>`)
+      .join("");
+    // Display skill trigger count
+    let skillLine = "";
+    if (p.skillInfo) {
+      if (sleepTap) {
+        skillLine = `<div class="pks-pb-row"><span class="pks-pb-ing">Skill Triggers (week)</span><span style="color:var(--pks-purple);font-weight:700;">${p.skillInfo.total.toFixed(1)} times</span></div>`;
+      } else {
+        skillLine = `<div class="pks-pb-row"><span class="pks-pb-ing">Skill Triggers (Day)</span><span style="color:var(--pks-purple);font-weight:700;">${p.skillInfo.awake.toFixed(1)}/week</span></div>`
+          + `<div class="pks-pb-row"><span class="pks-pb-ing">Skill Triggers (Night, capped at ${p.skillInfo.sleepMax}/day)</span><span style="color:var(--pks-purple);font-weight:700;">${p.skillInfo.sleep.toFixed(1)}/week</span></div>`;
+      }
+    }
+    return `<div class="pks-pb-card">
+      <div class="pks-pb-name">${slotEmoji[p.slotType]??""} ${p.name}${workNote}</div>
+      ${lines||'<div style="font-size:11px;color:var(--pks-text-dim)">No ingredients</div>'}
+      ${skillLine}
+    </div>`;
+  }).join("");
+
+  // Surplus ingredients (weekly)
+  const surplusEntries = Object.entries(surplus).sort((a,b)=>b[1]-a[1]);
+  const surplusListHtml = surplusEntries.length
+    ? surplusEntries.map(([k,v])=>`・${ingLabel(k)}: ${v.toFixed(1)}/week`).join("<br>")
+    : "None";
+
+  document.getElementById("resultContent").innerHTML = `
+    <div class="pks-verdict">
+      <div class="pks-verdict-main ${allOk?"ok":"ng"}">${allOk?"✅ Ready for All 21 Meals!":"❌ Ingredients Are Short"}</div>
+      <div class="pks-verdict-sub">Simulation results for 1 week (7 days), 21 meals</div>
+      ${teamOtebonus > 0 ? `<div style="font-size:11px;color:var(--pks-green);margin-top:4px;">🤝 Team Helping Bonus +${Math.round(teamOtebonus*100)}% (from Helping Bonus Pokémon on the team, capped at 35%)</div>` : ""}
+      ${Object.keys(stockMap).length > 0 ? `<div style="font-size:11px;color:var(--pks-text-dim);margin-top:4px;">Includes starting stock</div>` : ""}
+    </div>
+    ${needKeys.length?`<div class="pks-result-section-title">Ingredient Sufficiency (Weekly)</div><div class="pks-ing-grid">${ingHtml}</div>`:""}
+    ${detailHtml}
+    <div class="pks-result-section-title" style="margin-top:16px;">🐾 Per-Pokémon Ingredient Yield (Full-day active, assuming max energy)</div>
+    <div class="pks-pb-list">${pbHtml}</div>
+    <div class="pks-extra">
+      <div class="pks-extra-label">📦 Surplus Ingredients (weekly, after dishes)</div>
+      <div class="pks-extra-item">${surplusListHtml}</div>
+    </div>
+  `;
+}
+
+loadDB();
+</script>
+  </script>
+</div> <!-- end pks-wrap -->
+
+<!-- ★★★ Buy Me a Coffee section ★★★ -->
+<div style="margin: 24px 0; padding: 20px; background: rgba(169,142,232,0.08); border: 1px solid rgba(169,142,232,0.3); border-radius: 14px;">
+  <p style="font-size: 14px; line-height: 1.8; margin-bottom: 12px; color: var(--pks-text);">
+    Thanks so much for reading this far.<br>
+    To keep improving this tool and writing strategy articles,<br>
+    I'd really appreciate a little support if you're willing.<br>
+    Any tips go toward <strong>tool development costs and Pokémon Sleep research.</strong>
+  </p>
+  <a href="https://www.buymeacoffee.com/Tofumental" target="_blank"
+     style="background: #FFDD00; color: #000; padding: 12px 18px; border-radius: 8px; font-weight: bold;
+            text-decoration: none; display: block; text-align: center;">
+    ☕ Support me on Buy Me a Coffee
+  </a>
+</div>
+
+<!-- ★★★ Footer (links to About / Privacy / Contact) ★★★ -->
+<footer style="text-align:center; margin: 40px 0; color: var(--pks-text-dim); font-size: 12px;">
+  <a href="about.html" style="color: var(--pks-text-dim); margin: 0 8px;">About</a>
+  <a href="privacy.html" style="color: var(--pks-text-dim); margin: 0 8px;">Privacy Policy</a>
+  <a href="contact.html" style="color: var(--pks-text-dim); margin: 0 8px;">Contact</a>
+</footer>
+
+</body>
+</html>
